@@ -43,25 +43,59 @@ export default {
 </script>
 
 <style>
+/*
+***
+* FONT
+***
+*/
+
+@font-face {
+  font-family: CocogooseBold;
+  src: url("assets/fonts/Cocogoose Classic Bold.otf") format("opentype");
+}
+
+@font-face {
+  font-family: Bright;
+  src: url("assets/fonts/Bright.otf") format("opentype");
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+/*
+***
+* TRANSITION BACKGROUND
+***
+*/
+
 #fullBackground {
   position: fixed;
   height: 100vh;
   width: 100%;
   z-index: 5000;
-  background-color: #d97642;
+  background-color: var(--orange);
   right: 100%;
   top: 0;
 }
 
-@font-face {
-  font-family: BrandonBold;
-  src: url("assets/brandon-black.otf") format("opentype");
+/*
+***
+* VARIABLES
+***
+*/
+
+:root {
+  --orange: #d97642;
+  --yellow: #d49d42;
+  --purple: #352e6b;
+  --red: #c15050;
+  --darkerRed: #a04747;
+  --lightBlue: #b2deec;
+  --lightGray: #7a848d;
+  --foreground: white;
+  --foregroundDark: black;
 }
-@font-face {
-  font-family: Bright;
-  src: url("assets/Bright.otf") format("opentype");
-}
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;700&display=swap");
 
 /*
 ***
@@ -78,23 +112,13 @@ export default {
 
 html {
   font-size: 62.5%;
-  font-family: "BrandonBold", sans-serif;
-  background-color: #352e6b;
-  color: white;
+  font-family: "CocogooseBold", sans-serif;
+  background-color: var(--purple);
+  color: var(--foreground);
 }
 
 body {
   margin: 0;
-}
-
-/*
-***
-* FONT
-***
-*/
-
-.uppercase {
-  text-transform: uppercase;
 }
 
 /*
@@ -142,33 +166,7 @@ body {
   justify-content: space-between;
 }
 
-/*
-***
-* ROUTE ANIMATION
-***
-*/
-
-.route-enter-from {
-  opacity: 0;
-  transform: translateY(-30px);
-}
-
-.route-leave-to {
-  opacity: 0;
-  transform: translateY(30px);
-}
-
-.route-enter-active {
-  transition: all 0.3s ease-out;
-}
-
-.route-leave-active {
-  transition: all 0.3s ease-in;
-}
-
-.route-enter-to,
-.route-leave-from {
-  opacity: 1;
-  transform: translateY(0);
+.text-center {
+  text-align: center;
 }
 </style>

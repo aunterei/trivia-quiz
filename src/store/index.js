@@ -7,12 +7,12 @@ export default createStore({
       teams: [
         {
           teamName: "Super",
-          players: ["Quentin", "Mégane"],
+          teamPlayers: ["Quentin", "Mégane"],
           score: 0,
         },
         {
           teamName: "Génial",
-          players: ["Alex", "Malo"],
+          teamPlayers: ["Alex", "Malo"],
           score: 0,
         },
       ],
@@ -28,6 +28,9 @@ export default createStore({
         team.score = 0;
       });
     },
+    resetTeams(state) {
+      state.teams = [];
+    },
   },
   actions: {
     addTeam(context, payload) {
@@ -37,6 +40,9 @@ export default createStore({
     },
     resetScores(context) {
       context.commit("resetScores");
+    },
+    resetTeams(context) {
+      context.commit("resetTeams");
     },
   },
   modules: {

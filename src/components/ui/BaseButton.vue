@@ -32,15 +32,15 @@ export default {
 <style scoped>
 button,
 a {
-  text-decoration: none;
-  padding: 0.75rem 1.5rem;
-  font: inherit;
-  background-color: #c15050;
-  border: 1px solid #c15050;
-  color: white;
-  cursor: pointer;
-  border-radius: 10px;
   display: inline-block;
+  text-decoration: none;
+  font: inherit;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--red);
+  border: 1px solid var(--red);
+  border-radius: 10px;
+  color: var(--foreground);
+  cursor: pointer;
   font-size: 1.8rem;
 }
 
@@ -48,8 +48,8 @@ a:hover,
 a:active,
 button:hover,
 button:active {
-  background-color: #a04747;
-  border-color: #a04747;
+  background-color: var(--darkerRed);
+  border-color: var(--darkerRed);
 }
 
 .horizontalMargin {
@@ -57,13 +57,13 @@ button:active {
 }
 
 .valid {
-  color: black;
-  background-color: #b2deec;
-  border: 1px solid #b2deec;
+  color: var(--foregroundDark);
+  background-color: var(--lightBlue);
+  border: 1px solid var(--lightBlue);
 }
 .valid:hover,
 .valid:active {
-  background-color: #b2deec;
-  border-color: #b2deec;
+  background-color: var(--lightBlue);
+  border-color: var(--lightBlue);
 }
 </style>

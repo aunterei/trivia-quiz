@@ -1,9 +1,9 @@
 <template>
   <div class="main-container">
-    <div class="form-container">
+    <div class="form-container flex flex-column center">
       <h1 class="row">Equipe n° {{ isFirstTeam ? 1 : 2 }}</h1>
 
-      <section class="row center">
+      <section class="row center flex flex-column">
         <h2>
           Veuillez entrer le nom l'équipe numéro
           {{ isFirstTeam ? 1 : 2 }} :
@@ -17,12 +17,12 @@
         />
       </section>
 
-      <section class="row center">
+      <section class="row center flex flex-column">
         <h2>
           Liste des joueurs:
         </h2>
 
-        <div id="addPlayerForm" class="flex">
+        <div id="addPlayerForm" class="flex flex-center">
           <base-input-text
             ref="playerNameInput"
             placeholder="Nom"
@@ -43,12 +43,12 @@
       </section>
 
       <div class="row flex bottom">
-        <base-button class="button" type="button" @click="cancel">
+        <base-button class="button" type="button" link :to="home">
           Annuler
         </base-button>
-        <base-button class="button" mode="valid" @click="validate"
-          >Valider</base-button
-        >
+        <base-button class="button" mode="valid" @click="validate">
+          Valider
+        </base-button>
       </div>
     </div>
   </div>
@@ -86,35 +86,79 @@ export default {
 
         this.$refs.teamNameInput.clearText();
         this.players = [];
-      }
 
-      if (this.isFirstTeam) {
-        this.isFirstTeam = false;
+        if (this.isFirstTeam) {
+          this.isFirstTeam = false;
+        } else {
+          this.$router.replace("/game");
+        }
+        console.log(this.$store.getters["teams"]);
       } else {
-        this.$router.replace("/game");
+        //TODO: Error Handling :
+        // + If two teams have same name
       }
     },
     addPlayer() {
+      // If players name is null or empty
       if (this.playerName.trim() === "") {
+        console.log("error"); //TODO: handle error with modal
+      }
+      // Or if the name is already in the list
+      else if (this.players.find((x) => x == this.playerName)) {
         console.log("error");
-      } else if (this.players.find((x) => x == this.playerName)) {
-        console.log("error");
-      } else {
+      }
+      // If everything is ok, add player to the list
+      else {
         this.players.push(this.playerName);
-        this.showDialog = false;
       }
       this.$refs.playerNameInput.clearText();
     },
-    cancel() {
-      this.$router.replace("/");
+  },
+  computed: {
+    home() {
+      return "/";
     },
+  },
+  created() {
+    this.$store.dispatch("resetTeams");
   },
 };
 </script>
 
 <style scoped>
+.main-container {
+  width: 100%;
+  height: max-content;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.form-container {
+  min-height: 100vh;
+}
+
+section {
+  width: 80%;
+  max-width: 50rem;
+}
+
+/* Heading */
+
+h1 {
+  font-size: 5rem;
+  margin: 5rem 0;
+}
+
+h2 {
+  font-size: 1.9rem;
+  margin-bottom: 2rem;
+}
+
+/* Player List */
+
 ul {
-  list-style-image: url("../assets/rocket.svg");
+  list-style-image: url("../assets/img/rocket.svg");
   width: 100%;
   height: 20rem;
   padding-left: 3rem;
@@ -129,43 +173,21 @@ ul::-webkit-scrollbar {
 ul > li {
   font-size: 1.5rem;
 }
-.main-container {
-  width: 100%;
-  height: max-content;
-  position: absolute;
-  top: 0;
-  left: 0;
-  color: #fff;
-}
 
-.form-container {
-  min-height: 100vh;
-  align-items: center;
-  justify-content: top;
-  display: flex;
-  flex-direction: column;
-}
-
-section {
-  display: flex;
-  width: 80%;
-
-  max-width: 50rem;
-  flex-direction: column;
-}
-
-h1 {
-  font-size: 5rem;
-  margin: 5rem 0;
-}
-
-h2 {
-  font-size: 1.9rem;
-  margin-bottom: 2rem;
-}
+/* Input Forms */
 
 #teamNameInput {
   margin-bottom: 3rem;
+}
+
+#addPlayerForm {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+#addPlayerForm > button {
+  margin: 0 2rem;
+  height: 80%;
 }
 
 .button {
@@ -174,17 +196,7 @@ h2 {
   margin-right: 1rem;
 }
 
-#addPlayerForm {
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 2rem;
-}
-
-#addPlayerForm > button {
-  margin: 0 2rem;
-  height: 80%;
-}
+/* Desktop */
 
 @media (min-width: 769px) {
   h1 {

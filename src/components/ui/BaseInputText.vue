@@ -50,12 +50,12 @@ export default {
   width: 100%;
   height: 70px;
   border: 0;
-  background-color: #ffffff;
+  background-color: var(--foreground);
   border-radius: 22px;
 
   position: relative;
   font-size: 17px;
-  color: #7a848d;
+  color: var(--lightGray);
 
   transition: opacity 0.2s ease-in-out, filter 0.2s ease-in-out,
     box-shadow 0.1s ease-in-out;
@@ -73,9 +73,9 @@ export default {
   box-sizing: border-box;
   z-index: 3;
   display: block;
-  color: #000;
+  color: var(--foregroundDark);
   font-size: 17px;
-  font-family: "BrandonBold", sans-serif;
+  font-family: "CocogooseBold", sans-serif;
 
   transition: top 0.1s ease-in-out;
 }

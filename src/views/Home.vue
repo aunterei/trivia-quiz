@@ -3,8 +3,10 @@
     <transition appear @appear="enter" :css="false">
       <div id="container">
         <h2>Duff production presents:</h2>
-        <h1>VOUS CONNAISSEZ VOUS</h1>
-        <base-button @click="toTeamSelection">Commencer</base-button>
+        <h1 class="uppercase">Vous connaissez vous</h1>
+        <base-button link :to="teamSelection">
+          Commencer
+        </base-button>
       </div>
     </transition>
   </div>
@@ -21,8 +23,10 @@ export default {
         { opacity: 1, duration: 2, delay: 1 }
       );
     },
-    toTeamSelection() {
-      this.$router.replace("/teams");
+  },
+  computed: {
+    teamSelection() {
+      return "/teams";
     },
   },
 };
@@ -38,24 +42,12 @@ export default {
 
 h1 {
   font-family: Bright, "sans-serif";
-  color: #d97642;
   font-size: 8rem;
+  color: var(--orange);
   margin-bottom: 2rem;
 }
 
 h2 {
   font-size: 2rem;
-}
-
-/*transition the opacity when the element enters and leaves the DOM*/
-.fade-enter-active,
-.fade-leave-active {
-  transition: 3s;
-}
-
-/*set opacity to 0 at element's entrance and exit*/
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
 }
 </style>

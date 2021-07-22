@@ -5,8 +5,8 @@
     </div>
 
     <div
-      ref="timeoutDiv"
       class="pop-window timeout flex flex-center flex-column"
+      ref="timeoutDiv"
     >
       <h1>Le temps est écoulé !</h1>
       <h2>Dommage...</h2>
@@ -22,7 +22,7 @@
       </div>
     </div>
 
-    <div v-if="isGameOn" class="score-container flex space-between">
+    <div v-if="isGameOn" class="score-container flex space-between text-center">
       <div class="timer">{{ timer }}</div>
       <div>
         {{ teams[0].teamName }} : {{ teams[0].score }} -
@@ -30,11 +30,12 @@
       </div>
     </div>
 
-    <div class="question-container flex flex-center flex-column">
+    <div class="question-container flex flex-center flex-column text-center">
       <div v-if="isGameOn">
         <h2>
           Question n°
-          {{ questionNumber }} - Equipe {{ currentTeam.teamName }} :
+          {{ questionNumber }} - Equipe
+          {{ teams[questionNumber % 2].teamName }} :
         </h2>
 
         <h1>{{ question }}</h1>
@@ -68,8 +69,6 @@ export default {
     return {
       questions: [],
       teams: [],
-      currentTeam: null,
-      otherTeam: null,
       questionNumber: 0,
       question: "",
       isGameOn: true,
@@ -87,6 +86,7 @@ export default {
         });
       };
     }
+    // [WIP] Handling Xbox Controllers
     window.addEventListener("gamepadconnected", function(e) {
       console.log(
         "Gamepad connected at index %d: %s. %d buttons, %d axes.",
@@ -100,36 +100,30 @@ export default {
     this.initGame();
   },
   methods: {
+    rand(lowest, highest) {
+      var adjustedHigh = highest - lowest + 1;
+      return Math.floor(Math.random() * adjustedHigh) + parseFloat(lowest);
+    },
     initGame() {
       this.isGameOn = true;
       this.questionNumber = 0;
       this.$store.dispatch("resetScores");
       this.teams = this.$store.getters["teams"];
       this.questions = this.$store.getters["questions"];
-      this.currentTeam = this.teams[0];
-      this.otherTeam = this.teams[1];
 
       this.nextQuestion();
       this.initTimer();
     },
-    rand(lowest, highest) {
-      var adjustedHigh = highest - lowest + 1;
-      return Math.floor(Math.random() * adjustedHigh) + parseFloat(lowest);
-    },
     goodAnswer() {
-      this.currentTeam.score++;
+      this.teams[this.questionNumber % 2].score++;
       this.finishRound();
     },
     finishRound() {
       gsap.to(this.$refs.answerDiv, { left: "100%", duration: 1 });
-
-      let tmp = this.currentTeam;
-      this.currentTeam = this.otherTeam;
-      this.otherTeam = tmp;
       this.nextQuestion();
     },
     nextQuestion() {
-      if (this.questions.length > 0) {
+      if (this.questions.length > 0 && this.questionNumber < 20) {
         this.questionNumber++;
         let unformattedQuestion = this.questions[
           this.rand(0, this.questions.length - 1)
@@ -140,8 +134,11 @@ export default {
         );
 
         this.question = unformattedQuestion.format(
-          this.otherTeam.players[
-            this.rand(0, this.otherTeam.players.length - 1)
+          this.teams[1 - (this.questionNumber % 2)].teamPlayers[
+            this.rand(
+              0,
+              this.teams[1 - (this.questionNumber % 2)].teamPlayers.length - 1
+            )
           ]
         );
 
@@ -187,30 +184,12 @@ export default {
 </script>
 
 <style scoped>
-.pop-window {
-  position: fixed;
-  z-index: 4000;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-}
-.answer {
-  background-color: #d49d42;
-  left: 100%;
-}
-.timeout {
-  background-color: #c15050;
-
-  transform: scale(0);
-}
-.timeout > img {
-  max-width: 100%;
-}
 .main-container {
   height: 100vh;
   width: 100%;
 }
+
+/* Background */
 
 .img-container {
   position: fixed;
@@ -220,10 +199,42 @@ export default {
   width: 100%;
 }
 
+/* Styling for timeout and buzzer pressed */
+
+.pop-window {
+  position: fixed;
+  z-index: 4000;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+}
+
+.answer {
+  background-color: var(--yellow);
+  left: 100%;
+}
+
+.game-buttons > button {
+  margin: 3rem 1rem;
+}
+
+.timeout {
+  background-color: var(--red);
+
+  transform: scale(0);
+}
+
+.timeout > img {
+  max-width: 100%;
+}
+
 .img-container > img {
   width: 100%;
   max-width: 55rem;
 }
+
+/* Displayed Scores */
 
 .score-container {
   position: fixed;
@@ -231,23 +242,28 @@ export default {
   padding: 3rem;
   top: 0;
   right: 0;
-  text-align: center;
   width: 100%;
 }
 
+/* Timer */
+
 .timer {
-  background-color: #d49d42;
+  background-color: var(--yellow);
   width: 4rem;
   border-radius: 2rem;
 }
+
+/* Displayed Questions */
+
 .question-container {
   position: fixed;
   transform: translate(-50%, -45%);
   top: 50%;
   left: 50%;
   width: 250px;
-  text-align: center;
 }
+
+/* Headings */
 
 h2 {
   margin-bottom: 3rem;
@@ -258,9 +274,8 @@ h1 {
   font-size: 2.6rem;
 }
 
-.game-buttons > button {
-  margin: 3rem 1rem;
-}
+/* Game Over Section */
+
 .retry-container {
   margin-top: 1rem;
 }
@@ -274,9 +289,11 @@ ul {
 }
 
 li {
-  color: #d97642;
+  color: var(--yellow);
   font-size: 1.8rem;
 }
+
+/* Buzzer Button */
 
 #buzzer {
   position: fixed;
@@ -301,6 +318,7 @@ li {
   background-color: transparent;
   border-color: white;
 }
+
 @media (max-height: 960px) and (min-width: 769px) {
   #buzzer {
     width: 15rem !important;
